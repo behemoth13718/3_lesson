@@ -1,0 +1,56 @@
+==================
+Первое задание
+====================
+Поставио notify, вместо notifayAll. Разница в том что All будет все потоки,а при обычном варианте потоки сами просыпаются через указанный временной интервал в waite()
+====================
+    public static void main(String[] args) {
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    synchronized (mon) {
+                        while (currentLetter != 'A') {
+                            mon.wait(1000);
+                        }
+                        System.out.print("A");
+                        currentLetter = 'B';
+                        mon.notify();
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    synchronized (mon) {
+                        while (currentLetter != 'B') {
+                            mon.wait(1000);
+                        }
+                        System.out.print("B");
+                        currentLetter = 'C';
+                        mon.notify();
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    synchronized (mon) {
+                        while (currentLetter != 'C') {
+                            mon.wait(1000);
+                        }
+                        System.out.print("C");
+                        currentLetter = 'A';
+                        mon.notify();
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+}
